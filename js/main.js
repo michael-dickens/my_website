@@ -1,6 +1,8 @@
 //initialize function called when the script loads
 function initialize(){
     cities();
+    addColumns();
+    addEvents();
 };
 
 //function to create a table with cities and their populations
@@ -42,74 +44,72 @@ function cities(){
         $("table").append(rowHtml);
     };
 };
-
-//call the initialize function when the document has loaded
-$(document).ready(initialize);
-
 //function to add columns to a created table, taking cityPop as an argument
+
 
 function addColumns(cityPop){
     
     $('tr').each(function(i){
+        $("#mydiv").append("<table>");
+        
+        if (i == 0){
+         $("tr").append('<th>City Size</th>');   
+        } else {
+            
+            // Classifies cities by adding a new attribute citySize
 
-    	if (i == 0){
+            var citySize;
 
-    		console.log("butts")
+            // if (cityPop[i-1].population < 100000){
+            //     citySize = 'Small';
 
-    		$("th").apend('<th>City Size</th>');
-    	} else {
-    		console.log("but")
+            // } else if (cityPop[i-1].population < 500000 || cityPop[i-1].population >= 100000){
+            //     citysize = 'Medium';
 
-    		// Classifies cities by adding a new attribute citySize
+            // } else{
+            //     citySize = 'Large';
+            // };
 
-    		var citySize;
-
-    		if (cityPop[i-1].population < 100000){
-    			citySize = 'Small';
-
-    		} else if (cityPop[i-1].population < 500000){
-    			citysize = 'Medium';
-
-    		} else {
-    			citySize = 'Large';
-    		};
-
-    		$this.append('<td' + citySize + '</td>');
-    	};
+            // $("tr").append('<td>' + citySize + '</td>');
+        };
     });
 };
-addColumns()
+
 // a function to add "events" to the table, as well as interactivity through click
 // mouse hovering sensitivities
 
 function addEvents(){
+    $("#mydiv").append("<table>");
+    $('table').mouseover(function(){
+        // Following block assigns a random color to a variable
+        // then through css changes the color of the table
+        var color = "rgb(";
 
-	$('#table').mouseover(function(){
-		
-		var color = "rgb(";
+        for (var i=0; i<3; i++){
 
-		for (var i=0; i<3; i++){
+            var random = Math.round(Math.random() * 255);
 
-			var random = Math.round(Math.random() * 255);
+            color += random;
 
-			color += "random";
-
-			if (i<2){
-				color += ",";
-			
-			} else {
-				color += ")";
-		};
-
-		$(this).css('color', color);
-	};
-	// An interactive function that shows a message when clicked
-	function clickme(){
-
-		alert('Hey, you clicked me!');
-	};
-
-	$('table').on('click', clickme);
-});
+            if (i<2){
+                color += ",";
+            
+            } else {
+                color += ")";
+        };
+        // changes the table color
+        $('table').css('color', color);
+    };
+    // An interactive function that shows a message when clicked
+    function clickme(){
+        // the click messge
+        alert('Hey, you clicked me!');
+        //prevents the message box from popping up after exiting
+        ('table').off('click', clickme);
+    };
+    // adding the event listener
+    $('table').on('click', clickme);
+    });
 };
-addEvents()
+//call the initialize function when the document has loaded
+$(document).ready(initialize);
