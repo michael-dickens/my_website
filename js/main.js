@@ -69,7 +69,7 @@ function addColumns(){
     });
 };
 
-// a function to add "events" to the table, as well as interactivity through click
+// a function to add "events" to the table, as well as interactivity through click 
 // mouse hovering sensitivities
 
 function addEvents(){
