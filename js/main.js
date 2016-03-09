@@ -9,7 +9,7 @@ window.onload = function(){
         .attr("width", w) // assign width
         .attr("height", h) // assign height
         .attr("class", "container") //always assign a class (as the block name) for styling and future selection
-        .style("background-color", "rgba(55,0,0,0.9)"); // red, blue, green, alpha
+        //.style("background-color", "rgba(55,0,0,0.9)"); // red, blue, green, alpha
 
         var innerRect = container.append("rect") //put a new rect in the svg
             .datum(400)
@@ -27,21 +27,61 @@ window.onload = function(){
         var cityPop = [
             { 
             city: 'Minneapolis',
-            population: 382578
+            population: 233209
             },
             {
             city: 'Winnepeg',
-            population: 663617
+            population: 27244
             },
             {
             city: 'Saskatoon',
-            population: 222189
+            population: 594833
             },
             {
             city: 'Regina',
-            population: 193100
+            population: 104057
             }
         ];
+
+
+        //find the minimum value of the array
+        var minPop = d3.min(cityPop, function(d){
+            return d.population;
+            });
+
+
+        //find the maximum value of the array
+        var maxPop = d3.max(cityPop, function(d){
+         return d.population;
+        });
+
+            //scale for circles center y coordinate
+        var y = d3.scale.linear()
+            .range([440, 95])
+            .domain([
+                minPop,
+                maxPop
+            ]);
+
+
+        var x = d3.scale.linear() //create the scale
+            .range([90, 810]) //output min and max
+            .domain([0, 3]); //input min and max  
+
+
+         //color scale generator 
+        var color = d3.scale.linear()
+            .range([
+                "#FDBE85",
+                "#D94701"
+            ])
+            .domain([
+                minPop, 
+                maxPop
+            ]);
+
+
+
 
         var circles = container.selectAll(".circles") //but wait--there are no circles yet!
             .data(cityPop) //here we feed in an array
@@ -53,11 +93,14 @@ window.onload = function(){
                 return Math.sqrt(area/Math.PI);
                 })
             .attr("cx", function(d, i){ //x coordinate
-                return 90 + (i * 180);
+                return x(i); // uses the scale to place the circlez
                 })
             .attr("cy", function(d){ //y coordinate
-                return 450 - (d.population * 0.0005);
-                });
-            
+                return y(d.population);
+                })
+            .style("fill", function(d, i){ //add a fill based on the color scale generator
+                return color(d.population);
+                })
+            .style("stroke", "#000"); //black circle stroke
 // In any method chain or block, only chain together methods belonging to the library referenced at the start of the chain
 };
