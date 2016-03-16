@@ -26,19 +26,19 @@ window.onload = function(){
 
         var cityPop = [
             { 
-            city: 'Minneapolis',
+            city: 'Town A',
             population: 233209
             },
             {
-            city: 'Winnepeg',
-            population: 27244
+            city: 'Town B',
+            population: 50000
             },
             {
-            city: 'Saskatoon',
+            city: 'Town C',
             population: 594833
             },
             {
-            city: 'Regina',
+            city: 'Town D',
             population: 104057
             }
         ];
@@ -57,15 +57,12 @@ window.onload = function(){
 
             //scale for circles center y coordinate
         var y = d3.scale.linear()
-            .range([440, 95])
-            .domain([
-                minPop,
-                maxPop
-            ]);
+            .range([450, 50]) //was 440, 95
+            .domain([0, 800000]); //was minPop, maxPop
 
 
         var x = d3.scale.linear() //create the scale
-            .range([90, 810]) //output min and max
+            .range([120, 730]) //output min and max
             .domain([0, 3]); //input min and max  
 
 
@@ -102,5 +99,60 @@ window.onload = function(){
                 return color(d.population);
                 })
             .style("stroke", "#000"); //black circle stroke
+
+        //AXES
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        var axis = container.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(50, 0)")
+            .call(yAxis);
+
+        // TEXTO!
+        var title = container.append("text")
+            .attr("class", "title")
+            .attr("text-anchor", "middle")
+            .attr("x", 450)
+            .attr("y", 30)
+            .text("City Populations");
+
+        //Labels
+    var labels = container.selectAll(".labels")
+        .data(cityPop)
+        .enter()
+        .append("text")
+        .attr("class", "labels")
+        .attr("text-anchor", "left")
+        .attr("y", function(d){
+            //vertical position centered on each circle
+            return y(d.population) + 5;
+        })
+        //1st line
+    var nameLine = labels.append("tspan")
+        .attr("class","nameLine")
+        .attr("x", function(d,i){
+            //horizontal position to the right of each circle
+            return x(i) + Math.sqrt(d.population * 0.01 / Math.PI) + 5;
+        })
+
+        .text(function(d){
+            return d.city;
+        })
+
+    var format = d3.format(",");
+        //2nd Line
+    var popLine = labels.append("tspan")
+        .attr("class", "popLine")
+        .attr("x", function(d,i){
+            //horizontal position to the right of each circle
+            return x(i) + Math.sqrt(d.population * 0.01 / Math.PI) + 5;
+            })
+        .attr("dy", "15")
+        .text(function(d){
+            return "Pop. " + format(d.population);
+        });
+
 // In any method chain or block, only chain together methods belonging to the library referenced at the start of the chain
 };
